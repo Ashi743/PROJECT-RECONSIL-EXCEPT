@@ -9,25 +9,11 @@ class Guardrails:
     SANCTIONS_LIST = ["Iran Inc", "Syria Corp", "North Korea Ltd", "Cuban Export"]
 
     def __init__(self, database):
-        """
-        Initialize guardrails.
-
-        Args:
-            database: Database instance for audit logging
-        """
+        """Initialize guardrails."""
         self.database = database
 
     def route_by_confidence(self, confidence: int, decision_type: str) -> Dict:
-        """
-        Route decisions based on confidence score (Guardrail 1).
-
-        Args:
-            confidence: Confidence score (0-100)
-            decision_type: Type of decision (reconciliation | lc_validation)
-
-        Returns:
-            Dict with routing action, owner, deadline, and urgency
-        """
+        """Route decisions based on confidence score."""
         if confidence > 95:
             action = "AUTO_APPROVE"
             owner = None
@@ -58,50 +44,15 @@ class Guardrails:
         }
 
     def log_agent_decision(self, agent_name: str, decision: dict, confidence: int, reasoning: str) -> str:
-        """
-        Log agent decision to audit trail (delegates to database).
-
-        Args:
-            agent_name: Name of agent
-            decision: Decision dict
-            confidence: Confidence score
-            reasoning: Reasoning text
-
-        Returns:
-            audit_id
-        """
+        """Log agent decision to audit trail."""
         return self.database.log_agent_decision(agent_name, decision, confidence, reasoning)
 
     def log_human_approval(self, audit_id: str, approver: str, decision: str, notes: str, confidence: int) -> None:
-        """
-        Log human approval decision.
-
-        Args:
-            audit_id: Reference to agent decision
-            approver: Approver name
-            decision: APPROVE | REJECT | REQUEST_INFO
-            notes: Human notes
-            confidence: Human confidence (0-100)
-        """
+        """Log human approval decision."""
         self.database.log_human_approval(audit_id, approver, decision, notes, confidence)
 
     def mask_for_display(self, data: dict, user_role: str) -> dict:
-        """
-        Mask sensitive fields based on user role (Guardrail 3).
-
-        Roles:
-        - viewer: minimal info
-        - analyst: essentials, masked details
-        - manager: most fields, partial masking
-        - compliance: full access
-
-        Args:
-            data: Data dict to mask
-            user_role: User's role
-
-        Returns:
-            Masked data dict
-        """
+        """Mask sensitive fields based on user role."""
         sensitive_fields = [
             "counterparty_name",
             "bank_details",
@@ -125,8 +76,6 @@ class Guardrails:
                         masked[field] = "***REDACTED***"
                     elif field in ["bank_details", "customer_contact", "account_numbers", "invoice_line_items"]:
                         masked[field] = "***REDACTED***"
-                    elif isinstance(masked.get("lc_amount"), (int, float)):
-                        masked["lc_amount"] = f"₹{masked['lc_amount'] / 10_000_000:.2f}Cr"
         elif user_role == "manager":
             for field in sensitive_fields:
                 if field == "counterparty_name" and isinstance(masked[field], str) and len(masked[field]) > 6:
@@ -134,30 +83,11 @@ class Guardrails:
                     masked[field] = f"{name[:3]}...{name[-3:]}"
                 elif field in ["bank_details", "account_numbers"]:
                     masked[field] = "***REDACTED***"
-        elif user_role == "compliance":
-            pass
-        else:
-            pass
 
         return masked
 
     def check_ucp600_compliance(self, lc_data: dict) -> Dict:
-        """
-        Check LC against UCP 600 standards (Guardrail 4).
-
-        Checks:
-        1. Negotiability
-        2. Time-bar (expiry)
-        3. Amount
-        4. Sanctions
-        5. Incoterm alignment
-
-        Args:
-            lc_data: LC data dict
-
-        Returns:
-            Dict with compliance status, violations, and warnings
-        """
+        """Check LC against UCP 600 standards."""
         violations = []
         warnings = []
 
@@ -220,27 +150,11 @@ class Guardrails:
         }
 
     def check_sanctions(self, counterparty: str) -> bool:
-        """
-        Check if counterparty is on sanctions list.
-
-        Args:
-            counterparty: Counterparty name
-
-        Returns:
-            True if safe, False if sanctioned
-        """
+        """Check if counterparty is on sanctions list."""
         return counterparty not in self.SANCTIONS_LIST
 
     def check_time_bar(self, days_remaining: int) -> Dict:
-        """
-        Check if time-bar is approaching.
-
-        Args:
-            days_remaining: Days until expiry
-
-        Returns:
-            Dict with alert level and message
-        """
+        """Check if time-bar is approaching."""
         if days_remaining <= 0:
             alert_level = "CRITICAL"
             message = f"LC has expired ({days_remaining} days)"
@@ -261,15 +175,7 @@ class Guardrails:
         }
 
     def create_hitl_workflow(self, agent_recommendation: dict) -> Dict:
-        """
-        Create HITL approval workflow structure (Guardrail 5).
-
-        Args:
-            agent_recommendation: Agent's recommendation dict
-
-        Returns:
-            HITL workflow structure
-        """
+        """Create HITL approval workflow structure."""
         audit_id = self._generate_audit_id()
         deadline = self._calculate_deadline(agent_recommendation)
 
@@ -286,8 +192,149 @@ class Guardrails:
             ]
         }
 
+    def create_hitl_display_data(self, agent_recommendation: dict, contract: dict = None, invoice: dict = None, receipt: dict = None) -> Dict:
+        """Create data structure optimized for HITL UI display."""
+        audit_id = agent_recommendation.get("audit_id", self._generate_audit_id())
+
+        variance_analysis = agent_recommendation.get("variance_analysis", {})
+        fraud_analysis = agent_recommendation.get("fraud_analysis", {})
+        anomaly_analysis = agent_recommendation.get("anomaly_analysis", {})
+
+        comparison_rows = []
+        if contract and invoice and receipt:
+            comparison_rows = [
+                {
+                    "field": "Quantity (MT)",
+                    "contract": str(contract.get("qty_mt", "N/A")),
+                    "invoice": str(invoice.get("qty_mt", "N/A")),
+                    "receipt": str(receipt.get("qty_mt", "N/A")),
+                    "status": "✅" if abs(invoice.get("qty_mt", 0) - contract.get("qty_mt", 0)) < contract.get("qty_mt", 1) * 0.005 else "⚠️",
+                    "variance": f"{variance_analysis.get('qty_variance', {}).get('variance_contract_to_invoice_pct', 0):.2f}%"
+                },
+                {
+                    "field": "Price (USD)",
+                    "contract": f"${contract.get('price_usd', 'N/A')}",
+                    "invoice": f"${invoice.get('price_usd', 'N/A')}",
+                    "receipt": "N/A",
+                    "status": "✅" if abs(invoice.get("price_usd", 0) - contract.get("price_usd", 0)) < contract.get("price_usd", 1) * 0.005 else "⚠️",
+                    "variance": f"{variance_analysis.get('price_variance', {}).get('variance_pct', 0):.2f}%"
+                },
+                {
+                    "field": "Date",
+                    "contract": contract.get("date", "N/A"),
+                    "invoice": invoice.get("date", "N/A"),
+                    "receipt": receipt.get("date", "N/A"),
+                    "status": "✅" if variance_analysis.get('timeline_variance', {}).get('severity') == 'GREEN' else "⚠️",
+                    "variance": f"{variance_analysis.get('timeline_variance', {}).get('days_diff', 0)} days"
+                }
+            ]
+
+        return {
+            "audit_id": audit_id,
+            "agent_recommendation": {
+                "status": agent_recommendation.get("status", "UNKNOWN"),
+                "confidence": agent_recommendation.get("confidence", 0),
+                "confidence_bar": "█" * (agent_recommendation.get("confidence", 0) // 10) + "░" * ((100 - agent_recommendation.get("confidence", 0)) // 10)
+            },
+            "comparison_table": {
+                "headers": ["Field", "Contract", "Invoice", "Receipt", "Status", "Variance"],
+                "rows": comparison_rows
+            },
+            "variance_summary": {
+                "qty_variance_pct": variance_analysis.get('qty_variance', {}).get('variance_contract_to_invoice_pct', 0),
+                "price_variance_pct": variance_analysis.get('price_variance', {}).get('variance_pct', 0),
+                "timeline_days": variance_analysis.get('timeline_variance', {}).get('days_diff', 0),
+                "variance_severity": variance_analysis.get('qty_variance', {}).get('severity', 'UNKNOWN')
+            },
+            "risk_summary": {
+                "fraud_score": fraud_analysis.get('fraud_score', 0),
+                "fraud_level_display": self._get_fraud_level_display(fraud_analysis.get('fraud_score', 0)),
+                "anomalies_count": anomaly_analysis.get('total_anomalies', 0),
+                "total_signals": fraud_analysis.get('total_signals_detected', 0) + anomaly_analysis.get('total_anomalies', 0)
+            },
+            "issues_for_review": self._generate_issues_list(variance_analysis, fraud_analysis, anomaly_analysis),
+            "approval_guidance": {
+                "decision_options": ["APPROVE", "REJECT", "REQUEST_MORE_INFO", "ESCALATE"],
+                "recommended_action": agent_recommendation.get("recommendation", "UNKNOWN"),
+                "if_approve": "Shipment will proceed to payment processing",
+                "if_reject": "Shipment will be escalated for investigation",
+                "if_request_info": "Specialist will contact you for additional details",
+                "escalation_reason": f"Fraud score {fraud_analysis.get('fraud_score', 0)}/100 detected" if fraud_analysis.get('fraud_score', 0) > 50 else None
+            }
+        }
+
+    def process_human_decision(self, audit_id: str, agent_recommendation: Dict, human_decision: str, human_notes: str, human_confidence: int) -> Dict:
+        """Process human's decision and calculate final status."""
+        agent_confidence = agent_recommendation.get("confidence", 50)
+
+        agreement = (human_decision == "APPROVE" and agent_recommendation.get("status") == "AUTO_APPROVE") or \
+                   (human_decision == "REJECT" and agent_recommendation.get("status") == "ESCALATE_TO_DIRECTOR")
+
+        final_confidence = self.calculate_blended_confidence(agent_confidence, human_confidence, agreement)
+
+        if human_decision == "APPROVE":
+            final_status = "APPROVED"
+        elif human_decision == "REJECT":
+            final_status = "REJECTED"
+        else:
+            final_status = "PENDING_INFO"
+
+        override_reason = None
+        if not agreement:
+            override_reason = f"Human {human_decision} overrides agent {agent_recommendation.get('status')}"
+
+        self.log_human_approval(audit_id, "user", human_decision, human_notes, human_confidence)
+
+        return {
+            "audit_id": audit_id,
+            "agent_recommendation": agent_recommendation.get("status", "UNKNOWN"),
+            "human_decision": human_decision,
+            "human_notes": human_notes,
+            "human_confidence": human_confidence,
+            "final_status": final_status,
+            "override_reason": override_reason,
+            "final_confidence": final_confidence,
+            "approval_chain": [
+                {
+                    "timestamp": datetime.now().isoformat(),
+                    "actor": "AGENT",
+                    "decision": agent_recommendation.get("status", "UNKNOWN"),
+                    "confidence": agent_confidence
+                },
+                {
+                    "timestamp": datetime.now().isoformat(),
+                    "actor": "HUMAN",
+                    "decision": human_decision,
+                    "confidence": human_confidence
+                }
+            ],
+            "logged_at": datetime.now().isoformat()
+        }
+
+    def calculate_blended_confidence(self, agent_confidence: int, human_confidence: int, agreement: bool) -> int:
+        """Blend agent and human confidence scores."""
+        if agreement:
+            blended = int(0.7 * agent_confidence + 0.3 * human_confidence)
+        else:
+            blended = int(0.5 * agent_confidence + 0.5 * human_confidence)
+
+        return max(0, min(100, blended))
+
+    def generate_approval_summary(self, decision_record: dict) -> str:
+        """Generate human-readable summary of decision."""
+        agent_status = decision_record.get("agent_recommendation", "UNKNOWN")
+        agent_conf = decision_record.get("approval_chain", [{}])[0].get("confidence", 0)
+        human_decision = decision_record.get("human_decision", "UNKNOWN")
+        human_conf = decision_record.get("human_confidence", 0)
+        final_status = decision_record.get("final_status", "UNKNOWN")
+        final_conf = decision_record.get("final_confidence", 0)
+
+        return f"""Agent recommended {agent_status} ({agent_conf}% confidence).
+Human {human_decision} ({human_conf}% confidence).
+Final Status: {final_status} ({final_conf}% blended confidence)."""
+
     def _generate_audit_id(self) -> str:
-        """Generate unique audit ID (AUD-{8_char_hex})."""
+        """Generate unique audit ID."""
         return f"AUD-{secrets.token_hex(4).upper()}"
 
     def _get_specialist(self, decision_type: str) -> str:
@@ -324,3 +371,53 @@ class Guardrails:
             deadline_dt = datetime.now() + timedelta(days=7)
 
         return deadline_dt.isoformat()
+
+    def _get_fraud_level_display(self, fraud_score: int) -> str:
+        """Get fraud level display with emoji."""
+        if fraud_score < 25:
+            return "🟢 LOW"
+        elif fraud_score < 50:
+            return "🟡 MEDIUM"
+        elif fraud_score < 75:
+            return "🟠 HIGH"
+        else:
+            return "🔴 CRITICAL"
+
+    def _generate_issues_list(self, variance_analysis: Dict, fraud_analysis: Dict, anomaly_analysis: Dict) -> List[Dict]:
+        """Generate list of issues for human review."""
+        issues = []
+
+        qty_var = variance_analysis.get('qty_variance', {})
+        if qty_var.get('severity') in ['ORANGE', 'RED']:
+            issues.append({
+                "issue_title": "Quantity Variance",
+                "issue_description": f"{qty_var.get('variance_contract_to_invoice_pct', 0):.2f}% variance between contract and invoice",
+                "severity": qty_var.get('severity'),
+                "impact": "Potential loss due to quantity discrepancy",
+                "requires_action": True,
+                "suggested_action": "Verify with warehouse or supplier"
+            })
+
+        if fraud_analysis.get('signals_detected'):
+            for signal in fraud_analysis['signals_detected']:
+                issues.append({
+                    "issue_title": signal.get('signal_type', 'Unknown'),
+                    "issue_description": signal.get('message', ''),
+                    "severity": signal.get('severity'),
+                    "impact": f"${signal.get('financial_exposure_usd', 0):,.2f} at risk",
+                    "requires_action": True,
+                    "suggested_action": "Investigate immediately"
+                })
+
+        if anomaly_analysis.get('anomalies_detected'):
+            for anomaly in anomaly_analysis['anomalies_detected'][:3]:
+                issues.append({
+                    "issue_title": anomaly.get('anomaly_type', 'Unknown'),
+                    "issue_description": anomaly.get('description', ''),
+                    "severity": anomaly.get('severity'),
+                    "impact": "Logical inconsistency detected",
+                    "requires_action": anomaly.get('severity') in ['HIGH', 'CRITICAL'],
+                    "suggested_action": "Request clarification from supplier"
+                })
+
+        return issues
