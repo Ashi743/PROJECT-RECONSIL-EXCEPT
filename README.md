@@ -1,13 +1,38 @@
-# Trade Operations Agentic Assistant
+# Trade Operations AI Platform (Unified)
 
-Production-ready AI system with 2 agents for trade finance operations using **advanced variance analysis, fraud detection, and anomaly detection**.
+Production-ready platform with **2 intelligent agents** working together to manage trade operations in real-time.
 
-1. **Reconciliation Agent** - 3-way reconciliation with 3D variance analysis, 9+ fraud signals, and 8+ anomaly patterns
-2. **LC Doc Agent** - Letter of Credit validation with UCP 600 compliance checks
+1. **Reconciliation Agent** (v2.0) - 3-way reconciliation with 3D variance analysis, 9+ fraud signals, 8+ anomaly patterns, and financial impact tracking
+2. **Exception Triage Agent** (v1.0) - Real-time monitoring, classification, and routing of operational exceptions with intelligent urgency assessment
+3. **LC Doc Agent** - Letter of Credit validation with UCP 600 compliance checks (integrated into unified platform)
 
-## ✨ Major Enhancements (v2.0)
+## ✨ Unified Platform Features (v3.0)
 
-### Reconciliation Agent - Now with Advanced Detection
+### Exception Triage Agent (NEW)
+
+**Real-Time Monitoring**
+- Continuous monitoring of shipments, documents, LCs, and laytime
+- Automatic exception detection and classification
+- 4 exception types: SHIPMENT_DELAY, MISSING_DOCUMENT, LC_DISCREPANCY, DD_RISK
+
+**Intelligent Routing**
+- Auto-routes to appropriate handler teams
+- Urgency-based deadlines (CRITICAL: 1h, HIGH: 4h, MEDIUM: 6h, LOW: 8h+)
+- Action plan generation (3-5 specific steps per exception)
+
+**Financial Impact Tracking**
+- Calculates ₹ exposure for each exception
+- Demurrage costs for shipment delays
+- LC amendment costs for discrepancies
+- Payment rejection risk for missing documents
+
+**Real-Time Dashboard**
+- Active exceptions list (color-coded by urgency)
+- Auto-refresh every 30 seconds
+- Quick-access action plans
+- Mark as resolved workflow
+
+### Reconciliation Agent - Advanced Detection
 
 **3D Variance Analysis**
 - Contract ↔ Invoice variance calculation
@@ -96,31 +121,113 @@ The app will open at `http://localhost:8501`
 
 ```
 bunge-agents/
-├── reconciliation_agent.py         # ENHANCED: VarianceCalculator, FraudDetector, AnomalyDetector
-├── guardrails.py                   # ENHANCED: HITLWorkflow class
-├── app.py                          # ENHANCED: 4 new UI sections
-├── doc_agent.py                    # LC validation logic
-├── database.py                     # ChromaDB + SQLite management
-├── run_tests.py                    # NEW: 15 test scenarios with automation
-├── requirements.txt                # Python dependencies (added pytest)
+├── # CORE AGENTS
+├── reconciliation_agent.py         # 3-way matching with fraud/anomaly detection
+├── exception_triage_agent.py       # NEW: Exception classification & routing
+├── real_time_monitor.py            # NEW: Background monitoring (APScheduler)
+├── doc_agent.py                    # Letter of Credit validation
+│
+├── # INFRASTRUCTURE
+├── app.py                          # MERGED: 7-page unified Streamlit app
+├── guardrails.py                   # Shared guardrails (confidence, audit, privacy, compliance, HITL)
+├── database.py                     # EXTENDED: SQLite + ChromaDB (7 tables total)
+├── requirements.txt                # Python dependencies
 ├── .env.example                    # API key template
-├── ENHANCEMENTS.md                 # NEW: Complete enhancement documentation
-├── PROGRESS.md                     # NEW: Implementation progress tracking
-├── README.md                       # This file
+│
+├── # TESTING
+├── run_tests.py                    # 15 reconciliation scenarios
+├── run_exception_tests.py          # NEW: 12 exception scenarios
+├── test_data/                      # NEW: 12 exception test files
+│   ├── exception_01_shipment_delay.json
+│   ├── exception_02_missing_document.json
+│   ├── exception_03_lc_discrepancy.json
+│   ├── exception_04_dd_risk.json
+│   ├── exception_05_critical_delay.json
+│   ├── exception_06_time_bar_approaching.json
+│   ├── exception_07_multiple_issues.json
+│   ├── exception_08_resolved_exception.json
+│   ├── exception_09_false_alarm.json
+│   ├── exception_10_urgent_escalation.json
+│   ├── exception_11_routine_delay.json
+│   └── exception_12_edge_case.json
+│
+├── # DOCUMENTATION
+├── README.md                       # This file (updated for v3.0)
+├── ENHANCEMENTS.md                 # Technical details of v2.0 features
+├── PROGRESS.md                     # Implementation tracking
+├── MERGE_SUMMARY.md                # NEW: Merge architecture & results
+│
+├── # DATA
 ├── data/
 │   ├── mock_contract.csv
 │   ├── mock_invoice.csv
 │   ├── mock_receipt.csv
 │   └── sample_lc.txt
-├── tests/                          # NEW: Test infrastructure
-│   └── __init__.py
+│
+├── # BACKUPS
+├── app_v1_reconciliation_only.py   # BACKUP: Original app before merge
+│
+├── # DATABASE
 ├── chroma_db/                      # ChromaDB vector store (auto-created)
 └── audit_logs.db                   # SQLite audit trail (auto-created)
 ```
 
 ## Usage
 
-### Reconciliation Agent
+### Starting the Platform
+
+```bash
+streamlit run app.py
+```
+
+The app will open at `http://localhost:8501` with 7 pages available in the sidebar.
+
+### Platform Navigation (7 Pages)
+
+**Page 1: 🏠 Home**
+- Platform overview and key metrics
+- Quick links to both agents
+- Recent activity feed (both agents)
+- Auto-approve rate, total financial exposure
+
+**Page 2: 🔄 Reconciliation Agent**
+- 3-way document matching
+- Upload CSV files or paste JSON data
+- 15 test scenarios available
+- Comprehensive analysis: variance, fraud, anomaly detection
+- HITL workflow for human approval
+
+**Page 3: 🚨 Exception Triage Dashboard**
+- Real-time view of active exceptions
+- Color-coded by urgency (CRITICAL/HIGH/MEDIUM/LOW)
+- Auto-refresh every 30 seconds
+- Quick actions: View Details, Mark Resolved
+- Expandable action plans
+
+**Page 4: 📋 Exception Details & Routing**
+- Select any active exception
+- Full details and routing information
+- Context data and action plan
+- Resolution workflow
+- Mark as resolved
+
+**Page 5: 📊 Unified Audit Trail**
+- Both agents' decisions in one place
+- Filter by agent type
+- Comprehensive decision history
+- Audit trail export capability
+
+**Page 6: 🔔 Alerts & Notifications**
+- CRITICAL alerts (immediate action needed)
+- HIGH priority alerts (urgent)
+- Alert details and handler information
+
+**Page 7: ⚙️ Settings**
+- Monitoring interval configuration
+- Auto-approve threshold adjustment
+- Critical exception escalation settings
+
+### Reconciliation Agent (Page 2)
 
 Use for 3-way matching with advanced variance, fraud, and anomaly detection.
 
@@ -322,13 +429,13 @@ Real-time metrics on the **📈 Dashboard** page:
 
 ## Testing
 
-### Run Test Suite
+### Reconciliation Agent Tests
 
 ```bash
 python run_tests.py
 ```
 
-Runs 15 comprehensive test scenarios:
+Runs 15 comprehensive reconciliation scenarios:
 
 **Scenario Coverage:**
 - ✅ Perfect match (100% confidence)
@@ -341,8 +448,41 @@ Runs 15 comprehensive test scenarios:
 
 **Test Output:**
 - Console report (pass/fail for each scenario)
-- JSON test results file (for analysis)
-- Summary statistics (pass rate, coverage)
+- JSON test results file (`reconciliation_test_results.json`)
+- Summary statistics (pass rate: 100%)
+
+### Exception Triage Agent Tests
+
+```bash
+python run_exception_tests.py
+```
+
+Runs 12 comprehensive exception scenarios:
+
+**Scenario Coverage:**
+- ✅ Shipment delays (various durations)
+- ✅ Missing documents (various deadlines)
+- ✅ LC discrepancies
+- ✅ Demurrage/detention risks
+- ✅ Critical urgency cases
+- ✅ Multiple overlapping issues
+- ✅ False alarms
+- ✅ Edge cases (ambiguous messages)
+
+**Test Output:**
+- Console report (pass/fail for each scenario)
+- JSON test results file (`exception_test_results.json`)
+- Category breakdown (by exception type)
+
+### Combined Test Suite
+
+```bash
+# Run both agents' tests
+python run_tests.py && python run_exception_tests.py
+```
+
+**Total Test Coverage**: 27 scenarios (15 + 12)
+**Expected Result**: 100% pass rate for both suites
 
 ### Test Example
 
