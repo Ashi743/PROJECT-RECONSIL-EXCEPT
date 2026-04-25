@@ -1,0 +1,18 @@
+{
+  "scenario_id": "exception_06_time_bar_approaching",
+  "description": "Certificate of Origin missing, 2 days to LC deadline - CRITICAL",
+  "exception_message": "Certificate of Origin not received, LC deadline in 2 days",
+  "context": {
+    "lc_id": "LC-2024-006",
+    "document_type": "Certificate of Origin",
+    "days_to_lc_deadline": 2,
+    "lc_amount": 8000000
+  },
+  "expected_output": {
+    "exception_type": "MISSING_DOCUMENT",
+    "urgency": "CRITICAL",
+    "urgency_score": 95,
+    "deadline": "1 hour",
+    "financial_impact": 4000000
+  }
+}

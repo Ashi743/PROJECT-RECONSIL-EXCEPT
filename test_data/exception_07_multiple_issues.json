@@ -1,0 +1,19 @@
+{
+  "scenario_id": "exception_07_multiple_issues",
+  "description": "Multiple issues: delay + missing doc + DD risk",
+  "exception_message": "MV Ganges delayed 4 days, Bill of Lading missing, laytime expires in 3 days",
+  "context": {
+    "shipment_id": "SHP-2024-007",
+    "vessel_name": "MV Ganges",
+    "days_delayed": 4,
+    "document_type": "Bill of Lading",
+    "days_to_lc_deadline": 10,
+    "days_to_laytime_expiry": 3,
+    "daily_dd_rate": 55000
+  },
+  "expected_output": {
+    "exception_type": "MISSING_DOCUMENT",
+    "urgency": "HIGH",
+    "classification_confidence": 85
+  }
+}

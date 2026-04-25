@@ -1,0 +1,14 @@
+{
+  "scenario_id": "exception_09_false_alarm",
+  "description": "False alarm - vessel actually on time",
+  "exception_message": "Vessel status unclear, possible delay",
+  "context": {
+    "shipment_id": "SHP-2024-009",
+    "vessel_name": "MV Swift",
+    "days_delayed": 0
+  },
+  "expected_output": {
+    "urgency": "LOW",
+    "urgency_score": 25
+  }
+}

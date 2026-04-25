@@ -1,0 +1,21 @@
+{
+  "scenario_id": "exception_01_shipment_delay",
+  "description": "Vessel delayed 5 days - HIGH urgency",
+  "exception_message": "Vessel MV Samudra delayed 5 days from Chennai to Mumbai",
+  "context": {
+    "shipment_id": "SHP-2024-001",
+    "vessel_name": "MV Samudra",
+    "days_delayed": 5,
+    "daily_dd_rate": 50000
+  },
+  "expected_output": {
+    "exception_type": "SHIPMENT_DELAY",
+    "classification_confidence": 90,
+    "urgency": "HIGH",
+    "urgency_score": 75,
+    "handler": "FREIGHT_TEAM",
+    "owner": "freight_specialist@bunge.com",
+    "deadline": "4 hours",
+    "financial_impact": 400000
+  }
+}

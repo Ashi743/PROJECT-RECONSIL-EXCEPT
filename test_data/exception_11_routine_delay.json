@@ -1,0 +1,18 @@
+{
+  "scenario_id": "exception_11_routine_delay",
+  "description": "Minor routine delay - LOW urgency",
+  "exception_message": "Vessel running 8 hours behind schedule due to weather",
+  "context": {
+    "shipment_id": "SHP-2024-011",
+    "vessel_name": "MV Breeze",
+    "days_delayed": 0.33,
+    "daily_dd_rate": 45000
+  },
+  "expected_output": {
+    "exception_type": "SHIPMENT_DELAY",
+    "urgency": "LOW",
+    "urgency_score": 25,
+    "deadline": "8 hours",
+    "financial_impact": 148500
+  }
+}

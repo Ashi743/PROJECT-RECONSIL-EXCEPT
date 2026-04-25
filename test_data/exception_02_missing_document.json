@@ -1,0 +1,21 @@
+{
+  "scenario_id": "exception_02_missing_document",
+  "description": "Bill of Lading missing, 5 days to LC deadline - HIGH urgency",
+  "exception_message": "Bill of Lading not received yet, LC expires in 5 days",
+  "context": {
+    "lc_id": "LC-2024-001",
+    "document_type": "Bill of Lading",
+    "days_to_lc_deadline": 5,
+    "lc_amount": 5000000
+  },
+  "expected_output": {
+    "exception_type": "MISSING_DOCUMENT",
+    "classification_confidence": 90,
+    "urgency": "HIGH",
+    "urgency_score": 75,
+    "handler": "DOCS_TEAM",
+    "owner": "docs_specialist@bunge.com",
+    "deadline": "2 hours",
+    "financial_impact": 1000000
+  }
+}

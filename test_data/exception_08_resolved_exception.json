@@ -1,0 +1,13 @@
+{
+  "scenario_id": "exception_08_resolved_exception",
+  "description": "Exception that gets resolved (test status update)",
+  "exception_message": "Invoice discrepancy - amount mismatch",
+  "context": {
+    "lc_id": "LC-2024-008"
+  },
+  "resolution": {
+    "resolved_by": "analyst@bunge.com",
+    "resolved_at": "2024-04-20T14:30:00Z",
+    "resolution_notes": "LC amendment obtained, discrepancy cleared"
+  }
+}

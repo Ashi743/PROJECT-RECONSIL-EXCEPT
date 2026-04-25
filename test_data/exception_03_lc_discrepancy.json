@@ -1,0 +1,20 @@
+{
+  "scenario_id": "exception_03_lc_discrepancy",
+  "description": "LC amount vs invoice mismatch - MEDIUM urgency",
+  "exception_message": "LC amount ₹50Cr vs invoice ₹52Cr - discrepancy detected",
+  "context": {
+    "lc_id": "LC-2024-002",
+    "lc_amount": 50000000,
+    "invoice_amount": 52000000
+  },
+  "expected_output": {
+    "exception_type": "LC_DISCREPANCY",
+    "classification_confidence": 90,
+    "urgency": "MEDIUM",
+    "urgency_score": 50,
+    "handler": "TRADE_FINANCE_TEAM",
+    "owner": "lc_specialist@bunge.com",
+    "deadline": "24 hours",
+    "financial_impact": 5050000
+  }
+}

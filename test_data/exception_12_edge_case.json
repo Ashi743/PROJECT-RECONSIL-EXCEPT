@@ -1,0 +1,12 @@
+{
+  "scenario_id": "exception_12_edge_case",
+  "description": "Edge case - ambiguous exception message",
+  "exception_message": "Something is wrong with shipment ABC-123",
+  "context": {
+    "shipment_id": "SHP-2024-012"
+  },
+  "expected_output": {
+    "classification_confidence": 40,
+    "should_use_gpt": true
+  }
+}

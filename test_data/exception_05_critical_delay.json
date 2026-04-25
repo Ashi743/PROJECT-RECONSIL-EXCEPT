@@ -1,0 +1,18 @@
+{
+  "scenario_id": "exception_05_critical_delay",
+  "description": "Vessel delayed 10 days - CRITICAL urgency",
+  "exception_message": "MV Horizon delayed 10 days - critical customer contract at risk",
+  "context": {
+    "shipment_id": "SHP-2024-005",
+    "vessel_name": "MV Horizon",
+    "days_delayed": 10,
+    "daily_dd_rate": 60000
+  },
+  "expected_output": {
+    "exception_type": "SHIPMENT_DELAY",
+    "urgency": "CRITICAL",
+    "urgency_score": 95,
+    "deadline": "2 hours",
+    "financial_impact": 780000
+  }
+}

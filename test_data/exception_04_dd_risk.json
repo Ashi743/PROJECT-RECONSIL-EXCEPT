@@ -1,0 +1,21 @@
+{
+  "scenario_id": "exception_04_dd_risk",
+  "description": "Laytime expires in 2 days - CRITICAL urgency",
+  "exception_message": "Laytime expires in 2 days for MV Atlantic at Visakhapatnam port",
+  "context": {
+    "vessel_name": "MV Atlantic",
+    "port": "Visakhapatnam",
+    "days_to_laytime_expiry": 2,
+    "daily_dd_rate": 75000
+  },
+  "expected_output": {
+    "exception_type": "DD_RISK",
+    "classification_confidence": 90,
+    "urgency": "CRITICAL",
+    "urgency_score": 95,
+    "handler": "OPERATIONS_TEAM",
+    "owner": "operations_mgr@bunge.com",
+    "deadline": "1 hour",
+    "financial_impact": 225000
+  }
+}

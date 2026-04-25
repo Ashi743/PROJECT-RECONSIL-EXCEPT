@@ -1,0 +1,19 @@
+{
+  "scenario_id": "exception_10_urgent_escalation",
+  "description": "Immediate escalation needed - contract penalty risk",
+  "exception_message": "Force majeure event - port strike blocking discharge, contract penalty of ₹2Cr at risk",
+  "context": {
+    "shipment_id": "SHP-2024-010",
+    "vessel_name": "MV Thunder",
+    "days_delayed": 12,
+    "daily_dd_rate": 100000,
+    "contract_penalty": 20000000
+  },
+  "expected_output": {
+    "exception_type": "SHIPMENT_DELAY",
+    "urgency": "CRITICAL",
+    "urgency_score": 95,
+    "deadline": "1 hour",
+    "financial_impact": 21500000
+  }
+}
