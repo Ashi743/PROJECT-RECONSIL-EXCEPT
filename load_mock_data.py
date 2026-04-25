@@ -6,16 +6,20 @@ Run this once to populate test data: python load_mock_data.py
 import sqlite3
 import json
 from datetime import datetime, timedelta
+from database import Database
 
 
 def load_mock_data():
     """Load mock data into database."""
 
+    # Initialize database first (creates tables)
+    db = Database()
+
     db_path = "audit_logs.db"
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
-    print("📦 Loading mock shipment data...")
+    print("[SHIPMENTS] Loading mock shipment data...")
 
     # Mock shipments (some delayed, some on time)
     shipments = [
@@ -76,11 +80,11 @@ def load_mock_data():
                 shipment["daily_dd_rate"]
             ))
         except Exception as e:
-            print(f"  ⚠️  Shipment {shipment['shipment_id']}: {e}")
+            print(f"  [WARN] Shipment {shipment['shipment_id']}: {e}")
 
-    print(f"  ✅ Loaded {len(shipments)} shipments")
+    print(f"  [OK] Loaded {len(shipments)} shipments")
 
-    print("\n📄 Loading mock LC data...")
+    print("\n[LCS] Loading mock LC data...")
 
     # Mock LCs (some with missing docs)
     lcs = [
@@ -138,11 +142,11 @@ def load_mock_data():
                 lc["status"]
             ))
         except Exception as e:
-            print(f"  ⚠️  LC {lc['lc_id']}: {e}")
+            print(f"  [WARN] LC {lc['lc_id']}: {e}")
 
-    print(f"  ✅ Loaded {len(lcs)} LCs")
+    print(f"  [OK] Loaded {len(lcs)} LCs")
 
-    print("\n⚓ Loading mock vessel data...")
+    print("\n[VESSELS] Loading mock vessel data...")
 
     # Mock vessels (some approaching laytime expiry)
     vessels = [
@@ -197,14 +201,14 @@ def load_mock_data():
                 vessel["status"]
             ))
         except Exception as e:
-            print(f"  ⚠️  Vessel {vessel['vessel_name']}: {e}")
+            print(f"  [WARN] Vessel {vessel['vessel_name']}: {e}")
 
-    print(f"  ✅ Loaded {len(vessels)} vessels")
+    print(f"  [OK] Loaded {len(vessels)} vessels")
 
     conn.commit()
     conn.close()
 
-    print("\n✅ Mock data loading complete!")
+    print("\n[SUCCESS] Mock data loading complete!")
     print("\nData Summary:")
     print(f"  - Shipments: {len(shipments)} (some delayed)")
     print(f"  - LCs: {len(lcs)} (some with missing docs)")
