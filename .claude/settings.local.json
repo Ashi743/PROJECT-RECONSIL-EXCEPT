@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(git init *)",
-      "Bash(pip install *)"
+      "Bash(pip install *)",
+      "Bash(python load_mock_data.py)"
     ]
   }
 }
