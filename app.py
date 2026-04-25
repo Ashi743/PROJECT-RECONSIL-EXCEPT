@@ -369,6 +369,83 @@ elif page == "🚨 Exception Triage Dashboard":
 
     st.write("---")
 
+    # TEST EXCEPTION TRIGGERS (for demo/testing)
+    st.subheader("Test Exception Triggers (Manual Testing)")
+    st.write("*Quickly test how different exceptions are classified and routed to handler teams*")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        test_exception = st.selectbox(
+            "Select test exception to trigger",
+            [
+                "None",
+                "Shipment Delay (5 days)",
+                "Shipment Delay (10 days - CRITICAL)",
+                "Missing Document (5 days to deadline)",
+                "Missing Document (2 days - CRITICAL)",
+                "LC Discrepancy",
+                "Demurrage Risk (2 days - CRITICAL)",
+                "Demurrage Risk (8 days)",
+                "Multiple Issues"
+            ]
+        )
+
+    with col2:
+        if st.button("Trigger Test Exception", key="trigger_test_exc"):
+            test_scenarios = {
+                "Shipment Delay (5 days)": {
+                    "message": "Vessel MV Test delayed 5 days from port",
+                    "context": {"shipment_id": "TEST-001", "vessel_name": "MV Test", "days_delayed": 5, "daily_dd_rate": 50000}
+                },
+                "Shipment Delay (10 days - CRITICAL)": {
+                    "message": "MV Critical delayed 10 days - urgent customer",
+                    "context": {"shipment_id": "TEST-002", "vessel_name": "MV Critical", "days_delayed": 10, "daily_dd_rate": 60000}
+                },
+                "Missing Document (5 days to deadline)": {
+                    "message": "Bill of Lading still not received, LC expires in 5 days",
+                    "context": {"lc_id": "TEST-LC-001", "document_type": "Bill of Lading", "days_to_lc_deadline": 5, "lc_amount": 5000000}
+                },
+                "Missing Document (2 days - CRITICAL)": {
+                    "message": "Certificate of Origin missing, only 2 days to LC deadline",
+                    "context": {"lc_id": "TEST-LC-002", "document_type": "Certificate of Origin", "days_to_lc_deadline": 2, "lc_amount": 8000000}
+                },
+                "LC Discrepancy": {
+                    "message": "LC amount 50 Cr vs invoice 52 Cr - discrepancy detected",
+                    "context": {"lc_id": "TEST-LC-003", "lc_amount": 50000000, "invoice_amount": 52000000}
+                },
+                "Demurrage Risk (2 days - CRITICAL)": {
+                    "message": "Laytime expires in 2 days for MV Port - urgent discharge needed",
+                    "context": {"vessel_name": "MV Port", "port": "Test Port", "days_to_laytime_expiry": 2, "daily_dd_rate": 75000}
+                },
+                "Demurrage Risk (8 days)": {
+                    "message": "Vessel approaching laytime expiry - 8 days remaining",
+                    "context": {"vessel_name": "MV Discharge", "port": "Test Port", "days_to_laytime_expiry": 8, "daily_dd_rate": 60000}
+                },
+                "Multiple Issues": {
+                    "message": "MV Multi delayed 6 days, Bill of Lading missing, laytime expires in 4 days - URGENT",
+                    "context": {"shipment_id": "TEST-003", "vessel_name": "MV Multi", "days_delayed": 6, "days_to_lc_deadline": 7, "days_to_laytime_expiry": 4, "daily_dd_rate": 55000}
+                }
+            }
+
+            if test_exception != "None" and test_exception in test_scenarios:
+                scenario = test_scenarios[test_exception]
+                with st.spinner(f"Creating test exception: {test_exception}..."):
+                    result = exception_agent.detect_and_route(scenario["message"], scenario["context"])
+                    st.success(f"Test exception created and routed!")
+                    st.json({
+                        "exception_id": result.get("exception_id"),
+                        "type": result.get("exception_type"),
+                        "urgency": result.get("urgency"),
+                        "handler": result.get("handler"),
+                        "owner": result.get("owner"),
+                        "deadline": result.get("deadline"),
+                        "financial_impact": f"₹{result.get('financial_impact', 0):,.0f}"
+                    })
+                    st.rerun()
+
+    st.write("---")
+
     # EXCEPTIONS TABLE (sorted by urgency)
     st.subheader("Active Exceptions (Sorted by Urgency)")
 
