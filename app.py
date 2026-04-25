@@ -240,8 +240,7 @@ elif page == "🔄 Reconciliation Agent":
 
             st.subheader("📊 COMPREHENSIVE ANALYSIS RESULTS")
 
-            col1, col2, col3, col4 = st.columns(4)
-
+            # Prominent status display
             status_color = {
                 "AUTO_APPROVE": "🟢",
                 "ROUTE_TO_SPECIALIST": "🟡",
@@ -249,10 +248,29 @@ elif page == "🔄 Reconciliation Agent":
                 "ESCALATE_TO_DIRECTOR": "🔴"
             }
 
+            status_value = result['status']
+            status_icon = status_color.get(status_value, '')
+            confidence_value = result['confidence']
+
+            # Large, prominent status section
+            st.markdown(f"""
+            <div style="background-color: #f0f2f6; padding: 20px; border-radius: 10px; margin: 10px 0;">
+                <h2 style="margin: 0; text-align: center; font-size: 36px;">
+                    {status_icon} <span style="color: #1f77b4; font-weight: bold;">{status_value}</span>
+                </h2>
+                <p style="text-align: center; font-size: 18px; margin: 10px 0 0 0;">
+                    Confidence: <span style="color: #2ca02c; font-weight: bold; font-size: 24px;">{confidence_value}%</span>
+                </p>
+            </div>
+            """, unsafe_allow_html=True)
+
+            # Metrics row
+            col1, col2, col3, col4 = st.columns(4)
+
             with col1:
-                st.metric("Status", f"{status_color.get(result['status'], '')} {result['status']}")
+                st.metric("Status", status_value, status_icon)
             with col2:
-                st.metric("Confidence", f"{result['confidence']}%")
+                st.metric("Confidence", f"{confidence_value}%")
             with col3:
                 st.metric("Fraud Score", f"{result.get('fraud_analysis', {}).get('fraud_score', 0)}/100")
             with col4:
