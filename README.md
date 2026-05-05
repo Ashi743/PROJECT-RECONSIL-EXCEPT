@@ -1,4 +1,6 @@
-# AgroCompany Trade Operations AI Platform
+# Trade Operations AI Platform
+
+<img width="800" height="424" alt="Recording2026-04-25222950-ezgif com-speed" src="https://github.com/user-attachments/assets/a8b63e53-dc4a-4442-a5b5-42a6c80ef14d" />
 
 **Intelligent AI agents for automated trade finance reconciliation, exception detection, and real-time monitoring.**
 
