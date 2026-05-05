@@ -4,9 +4,23 @@
 
 **Intelligent AI agents for automated trade finance reconciliation, exception detection, and real-time monitoring.**
 
+
+
+
 [![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)]()
 [![Python](https://img.shields.io/badge/python-3.9%2B-blue)]()
 [![License](https://img.shields.io/badge/license-MIT-green)]()
+
+<img width="1280" height="683" alt="hermes" src="https://github.com/user-attachments/assets/8755aae8-ac2a-4d67-b5a4-26aa41ab2600" />
+<img width="729" height="547" alt="test-auto2" src="https://github.com/user-attachments/assets/13845da5-e02b-4c60-a113-50b66bd8bfb7" />
+<img width="705" height="532" alt="whatyoureceive" src="https://github.com/user-attachments/assets/7d84441d-e087-48c0-a6ec-54b5090b1aa7" />
+
+
+<img width="581" height="1280" alt="WhatsApp Image 2026-05-05 at 21 13 50 (1)" src="https://github.com/user-attachments/assets/3a48ae01-5811-4b5a-9760-131e7f05c967" />
+
+
+<img width="581" height="1280" alt="WhatsApp Image 2026-05-05 at 21 13 50" src="https://github.com/user-attachments/assets/7cec2c6a-77d0-4f4d-9f8c-e340bfe0d257" />
+
 
 ## 🎯 Overview
 
