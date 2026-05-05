@@ -3,7 +3,14 @@
     "allow": [
       "Bash(git init *)",
       "Bash(pip install *)",
-      "Bash(python load_mock_data.py)"
+      "Bash(python load_mock_data.py)",
+      "Bash(git rm *)",
+      "Bash(git commit -m 'Remove .env file from git tracking \\(contains secrets\\) *)",
+      "Bash(git reset *)",
+      "Bash(git clean *)",
+      "Bash(git push *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
     ]
   }
 }
