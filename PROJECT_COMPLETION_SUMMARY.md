@@ -238,7 +238,7 @@ PASS RATE: 12/12 (100%) ✅
 
 ### Core Application Files
 ```
-bunge-agents/
+agro-company-agents/
 ├── app.py                              # MERGED 7-page Streamlit app
 ├── reconciliation_agent.py             # 3-way matching + fraud/anomaly
 ├── exception_triage_agent.py           # Exception classification & routing

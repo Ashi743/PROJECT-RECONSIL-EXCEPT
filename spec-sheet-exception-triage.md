@@ -128,7 +128,7 @@ class ExceptionTriageAgent:
 EXCEPTION_TYPES = {
     "SHIPMENT_DELAY": {
         "handler": "FREIGHT_TEAM",
-        "owner": "freight_specialist@bunge.com",
+        "owner": "freight_specialist@agro-company.com",
         "default_deadline_hours": 4,
         "keywords": ["delay", "late", "delayed", "behind schedule", "vessel", "carrier", "shipment"],
         "description": "Shipment is delayed or vessel is behind schedule"
@@ -136,7 +136,7 @@ EXCEPTION_TYPES = {
     
     "MISSING_DOCUMENT": {
         "handler": "DOCS_TEAM",
-        "owner": "docs_specialist@bunge.com",
+        "owner": "docs_specialist@agro-company.com",
         "default_deadline_hours": 2,
         "keywords": ["missing", "document", "bol", "bill of lading", "invoice", "certificate", "bl", "missing doc"],
         "description": "Required document is missing or not yet received"
@@ -144,7 +144,7 @@ EXCEPTION_TYPES = {
     
     "LC_DISCREPANCY": {
         "handler": "TRADE_FINANCE_TEAM",
-        "owner": "lc_specialist@bunge.com",
+        "owner": "lc_specialist@agro-company.com",
         "default_deadline_hours": 24,
         "keywords": ["lc", "discrepancy", "letter of credit", "amendment", "clause", "ucp 600", "credit"],
         "description": "LC has discrepancy vs contract or invoice"
@@ -152,7 +152,7 @@ EXCEPTION_TYPES = {
     
     "DD_RISK": {
         "handler": "OPERATIONS_TEAM",
-        "owner": "operations_mgr@bunge.com",
+        "owner": "operations_mgr@agro-company.com",
         "default_deadline_hours": 2,
         "keywords": ["demurrage", "detention", "laytime", "dd", "d&d", "port", "discharge", "free time"],
         "description": "Demurrage/detention risk detected - vessel is approaching laytime expiry"
@@ -1008,7 +1008,7 @@ st.rerun()
     "urgency": "HIGH",
     "urgency_score": 75,
     "handler": "FREIGHT_TEAM",
-    "owner": "freight_specialist@bunge.com",
+    "owner": "freight_specialist@agro-company.com",
     "deadline": "4 hours",
     "financial_impact": 400000  # (5+3)*50K
   }
@@ -1031,7 +1031,7 @@ st.rerun()
     "urgency": "HIGH",
     "urgency_score": 75,
     "handler": "DOCS_TEAM",
-    "owner": "docs_specialist@bunge.com",
+    "owner": "docs_specialist@agro-company.com",
     "deadline": "2 hours",
     "financial_impact": 1000000  # 5M * 0.2
   }
@@ -1053,7 +1053,7 @@ st.rerun()
     "urgency": "MEDIUM",
     "urgency_score": 50,
     "handler": "TRADE_FINANCE_TEAM",
-    "owner": "lc_specialist@bunge.com",
+    "owner": "lc_specialist@agro-company.com",
     "deadline": "24 hours",
     "financial_impact": 5050000  # 50K amendment + 5M*0.1
   }
@@ -1076,7 +1076,7 @@ st.rerun()
     "urgency": "CRITICAL",
     "urgency_score": 95,
     "handler": "OPERATIONS_TEAM",
-    "owner": "operations_mgr@bunge.com",
+    "owner": "operations_mgr@agro-company.com",
     "deadline": "1 hour",
     "financial_impact": 225000  # (5-2)*75K
   }
@@ -1152,7 +1152,7 @@ st.rerun()
     "lc_id": "LC-2024-008"
   },
   "resolution": {
-    "resolved_by": "analyst@bunge.com",
+    "resolved_by": "analyst@agro-company.com",
     "resolved_at": "2024-04-20T14:30:00Z",
     "resolution_notes": "LC amendment obtained, discrepancy cleared"
   }

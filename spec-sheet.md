@@ -1211,7 +1211,7 @@ if human_decision:
         # Log to audit trail
         approval_record = guardrails.log_human_approval(
             audit_id=agent_result['audit_id'],
-            approver=st.session_state.get('user_email', 'demo_user@bunge.com'),
+            approver=st.session_state.get('user_email', 'demo_user@agro-company.com'),
             decision=human_decision,
             notes=human_notes,
             confidence=human_confidence

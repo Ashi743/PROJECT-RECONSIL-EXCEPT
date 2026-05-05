@@ -18,7 +18,7 @@ import uuid
 EXCEPTION_TYPES = {
     "SHIPMENT_DELAY": {
         "handler": "FREIGHT_TEAM",
-        "owner": "freight_specialist@bunge.com",
+        "owner": "freight_specialist@agro-company.com",
         "default_deadline_hours": 4,
         "keywords": ["delay", "late", "delayed", "behind schedule", "vessel", "carrier", "shipment"],
         "description": "Shipment is delayed or vessel is behind schedule"
@@ -26,7 +26,7 @@ EXCEPTION_TYPES = {
 
     "MISSING_DOCUMENT": {
         "handler": "DOCS_TEAM",
-        "owner": "docs_specialist@bunge.com",
+        "owner": "docs_specialist@agro-company.com",
         "default_deadline_hours": 2,
         "keywords": ["missing", "document", "bol", "bill of lading", "invoice", "certificate", "bl", "missing doc"],
         "description": "Required document is missing or not yet received"
@@ -34,7 +34,7 @@ EXCEPTION_TYPES = {
 
     "LC_DISCREPANCY": {
         "handler": "TRADE_FINANCE_TEAM",
-        "owner": "lc_specialist@bunge.com",
+        "owner": "lc_specialist@agro-company.com",
         "default_deadline_hours": 24,
         "keywords": ["lc", "discrepancy", "letter of credit", "amendment", "clause", "ucp 600", "credit"],
         "description": "LC has discrepancy vs contract or invoice"
@@ -42,7 +42,7 @@ EXCEPTION_TYPES = {
 
     "DD_RISK": {
         "handler": "OPERATIONS_TEAM",
-        "owner": "operations_mgr@bunge.com",
+        "owner": "operations_mgr@agro-company.com",
         "default_deadline_hours": 2,
         "keywords": ["demurrage", "detention", "laytime", "dd", "d&d", "port", "discharge", "free time"],
         "description": "Demurrage/detention risk detected - vessel is approaching laytime expiry"

@@ -141,10 +141,10 @@ User navigates to page
 
 | Type | Handler | Owner | Default Deadline | Urgency Rules |
 |------|---------|-------|------------------|---|
-| SHIPMENT_DELAY | FREIGHT_TEAM | freight_specialist@bunge.com | 4h | >7 days: CRITICAL, 3-7 days: HIGH, 1-3 days: MEDIUM, <1 day: LOW |
-| MISSING_DOCUMENT | DOCS_TEAM | docs_specialist@bunge.com | 2h | <3 days to deadline: CRITICAL, 3-7: HIGH, 7-14: MEDIUM, >14: LOW |
-| LC_DISCREPANCY | TRADE_FINANCE_TEAM | lc_specialist@bunge.com | 24h | Default MEDIUM (can be enhanced) |
-| DD_RISK | OPERATIONS_TEAM | operations_mgr@bunge.com | 2h | ≤2 days: CRITICAL, 3-5: HIGH, 6-10: MEDIUM, >10: LOW |
+| SHIPMENT_DELAY | FREIGHT_TEAM | freight_specialist@agro-company.com | 4h | >7 days: CRITICAL, 3-7 days: HIGH, 1-3 days: MEDIUM, <1 day: LOW |
+| MISSING_DOCUMENT | DOCS_TEAM | docs_specialist@agro-company.com | 2h | <3 days to deadline: CRITICAL, 3-7: HIGH, 7-14: MEDIUM, >14: LOW |
+| LC_DISCREPANCY | TRADE_FINANCE_TEAM | lc_specialist@agro-company.com | 24h | Default MEDIUM (can be enhanced) |
+| DD_RISK | OPERATIONS_TEAM | operations_mgr@agro-company.com | 2h | ≤2 days: CRITICAL, 3-5: HIGH, 6-10: MEDIUM, >10: LOW |
 
 ---
 

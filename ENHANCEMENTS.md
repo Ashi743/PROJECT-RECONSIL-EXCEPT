@@ -276,7 +276,7 @@ LC documents stored with:
 ## FILE STRUCTURE
 
 ```
-bunge-agents/
+agro-company-agents/
 ├── reconciliation_agent.py        [ENHANCED] 3 new classes
 ├── guardrails.py                   [ENHANCED] HITLWorkflow class
 ├── app.py                          [ENHANCED] 4 new UI sections
